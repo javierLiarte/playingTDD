@@ -3,6 +3,7 @@ package info.javierliarte.letsPlayTDD.finances;
 public class SavingsAccountYear {
 
 	private int startingBalance = 0;
+	private int capitalGainsAmount = 0;
 	private int interestRate = 0;
 	
 	public SavingsAccountYear(int startingBalance, int interestRate) {
@@ -10,32 +11,30 @@ public class SavingsAccountYear {
 		this.interestRate = interestRate;
 	}
 	
+	public SavingsAccountYear(int startingBalance, int capitalGainsAmount, int interestRate) {
+		this.startingBalance = startingBalance;
+		this.capitalGainsAmount = capitalGainsAmount;
+		this.interestRate = interestRate;
+	}
+	
 	public int startingBalance() {
 		return startingBalance;
 	}
 
-	public SavingsAccountYear() {
-		// TODO get rid of this constructor
+	public int interestRate() {
+		return interestRate;
 	}
 
-	public void deposit(int amount) {
-		startingBalance += amount;
-	}
-
-	public int balance() {
-		return startingBalance;
+	public int endingBalance() {
+		return startingBalance * (100 + interestRate) /100;
 	}
 
 	public SavingsAccountYear nextYear() {
 		return new SavingsAccountYear(this.endingBalance(),this.interestRate);
 	}
 
-	public int endingBalance() {
-		return balance() * (100 + interestRate) /100;
-	}
-
-	public int interestRate() {
-		return interestRate;
+	public void withdraw(int amount) {
+		startingBalance -= amount;
 	}
 
 }
