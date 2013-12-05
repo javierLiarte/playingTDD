@@ -6,15 +6,17 @@ public class SavingsAccountYear {
 	private int capitalGainsAmount = 0;
 	private int interestRate = 0;
 	private int totalWithdrawn = 0;
+	private int startingPrincipal = 0;
 	
 	public SavingsAccountYear(int startingBalance, int interestRate) {
 		this.startingBalance = startingBalance;
 		this.interestRate = interestRate;
 	}
 	
-	public SavingsAccountYear(int startingBalance, int capitalGainsAmount, int interestRate) {
+	public SavingsAccountYear(int startingBalance, int startingPrincipal, int interestRate) {
 		this.startingBalance = startingBalance;
-		this.capitalGainsAmount = capitalGainsAmount;
+		this.startingPrincipal = startingBalance;
+		this.capitalGainsAmount = startingBalance - startingPrincipal;
 		this.interestRate = interestRate;
 	}
 	
@@ -29,25 +31,38 @@ public class SavingsAccountYear {
 
 
 	public int endingPrincipal() {
-		int result = startingPrincipal() - totalWithdrawn;
-		return (result < 0) ? 0 : result;
+		int result = startingPrincipal() - totalWithdrawn();
+		return Math.max(0, result);
 	}
 
 	public int interestRate() {
 		return interestRate;
 	}
 
-	public int endingBalance() {
-		int modifiedStart = startingBalance - totalWithdrawn;
+	public int endingBalance(int capitalGainsTaxRate) {
+		int modifiedStart = startingBalance - totalWithdrawn() - capitalGainsTaxIncurred(capitalGainsTaxRate);
 		return modifiedStart * (100 + interestRate) /100;
 	}
 
-	public SavingsAccountYear nextYear() {
-		return new SavingsAccountYear(this.endingBalance(),this.interestRate);
+	public SavingsAccountYear nextYear(int capitalGainsTaxRate) {
+		return new SavingsAccountYear(this.endingBalance(capitalGainsTaxRate),this.interestRate);
 	}
 
 	public void withdraw(int amount) {
 		this.totalWithdrawn += amount;
+	}
+
+	public int totalWithdrawn() {
+		return this.totalWithdrawn;
+	}
+
+	public int capitalGainsWithdrawn() {
+		int result = -1 * (startingPrincipal() - totalWithdrawn());
+		return Math.max(0, result);
+	}
+
+	public int capitalGainsTaxIncurred(int taxRate) {
+		return capitalGainsWithdrawn() * taxRate / 100;
 	}
 
 }
