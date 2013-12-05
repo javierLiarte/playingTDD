@@ -3,20 +3,13 @@ package info.javierliarte.letsPlayTDD.finances;
 public class SavingsAccountYear {
 
 	private int startingBalance = 0;
-	private int capitalGainsAmount = 0;
 	private int interestRate = 0;
 	private int totalWithdrawn = 0;
 	private int startingPrincipal = 0;
 	
-	public SavingsAccountYear(int startingBalance, int interestRate) {
-		this.startingBalance = startingBalance;
-		this.interestRate = interestRate;
-	}
-	
 	public SavingsAccountYear(int startingBalance, int startingPrincipal, int interestRate) {
 		this.startingBalance = startingBalance;
-		this.startingPrincipal = startingBalance;
-		this.capitalGainsAmount = startingBalance - startingPrincipal;
+		this.startingPrincipal = startingPrincipal;
 		this.interestRate = interestRate;
 	}
 	
@@ -24,40 +17,54 @@ public class SavingsAccountYear {
 		return startingBalance;
 	}
 
-
 	public int startingPrincipal() {
-		return startingBalance - capitalGainsAmount;
+		return startingPrincipal;
 	}
 
-
-	public int endingPrincipal() {
-		int result = startingPrincipal() - totalWithdrawn();
-		return Math.max(0, result);
+	public int startingCapitalGains() {
+		return startingBalance - startingPrincipal;
 	}
 
 	public int interestRate() {
 		return interestRate;
 	}
+	
+	public int interestEarned(int capitalGainsTaxRate) {
+		return (startingBalance - totalWithdrawnExceptCapitalGainsTax() - capitalGainsTaxIncurred(capitalGainsTaxRate)) * interestRate / 100;
+	}
+
+	public int totalWithdrawnExceptCapitalGainsTax() {
+		return this.totalWithdrawn;
+	}
+
+	public int totalWithdrawn(int capitalGainsTax) {
+		return totalWithdrawnExceptCapitalGainsTax() + capitalGainsTaxIncurred(capitalGainsTax);
+	}
+
+	public int endingPrincipal() {
+		int result = startingPrincipal() - totalWithdrawnExceptCapitalGainsTax();
+		return Math.max(0, result);
+	}
+
+	public int endingCapitalGains() {
+		return 0;
+	}
 
 	public int endingBalance(int capitalGainsTaxRate) {
-		int modifiedStart = startingBalance - totalWithdrawn() - capitalGainsTaxIncurred(capitalGainsTaxRate);
-		return modifiedStart * (100 + interestRate) /100;
+		int modifiedStart = startingBalance - totalWithdrawnExceptCapitalGainsTax() - capitalGainsTaxIncurred(capitalGainsTaxRate);
+		return modifiedStart + interestEarned(capitalGainsTaxRate);
 	}
 
 	public SavingsAccountYear nextYear(int capitalGainsTaxRate) {
-		return new SavingsAccountYear(this.endingBalance(capitalGainsTaxRate),this.interestRate);
+		return new SavingsAccountYear(this.endingBalance(capitalGainsTaxRate), 0, this.interestRate);
 	}
 
 	public void withdraw(int amount) {
 		this.totalWithdrawn += amount;
 	}
 
-	public int totalWithdrawn() {
-		return this.totalWithdrawn;
-	}
-
 	public int capitalGainsWithdrawn() {
-		int result = -1 * (startingPrincipal() - totalWithdrawn());
+		int result = -1 * (startingPrincipal() - totalWithdrawnExceptCapitalGainsTax());
 		return Math.max(0, result);
 	}
 
