@@ -30,7 +30,7 @@ public class StockMarketYear {
 		this.totalWithdrawals += amount;
 	}
 
-	public int capitalGainsWithdrawn() {
+	private int capitalGainsWithdrawn() {
 		int result = -1 * (startingPrincipal() - totalWithdrawals);
 		return Math.max(0, result);
 	}
