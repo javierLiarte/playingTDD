@@ -14,25 +14,25 @@ public class _StockMarketYearTest {
 		assertEquals(10, year.interestRate());
 		assertEquals("total withdrawn default", 0, year.totalWithdrawn(25));
 	}
+
+	@Test
+	public void endingPrincipal() {
+		StockMarketYear year = new StockMarketYear(10000, 3000, 10);
+		year.withdraw(1000);
+		assertEquals("principal considers withdrawals", 2000, year.endingPrincipal());
+		year.withdraw(500);
+		assertEquals("ending principal considers totals multiple withdrawals", 1500, year.endingPrincipal());
+		year.withdraw(3000);
+		assertEquals("ending principal never goes below zero", 0, year.endingPrincipal());
+	}
 	
 	@Test
-	public void startingCapitalGainsIsStartingBalanceMinusStartingPrincipal() {
+	public void insterestEarned() {
 		StockMarketYear year = new StockMarketYear(10000, 3000, 10);
-		assertEquals (7000, year.startingCapitalGains());
-	}
-
-	@Test
-	public void endingPrincipalConsidersWithdrawals() {
-		StockMarketYear year = new StockMarketYear(10000, 3000, 10);
+		assertEquals("basic interest earned", 1000, year.interestEarned(25));
 		year.withdraw(2000);
-		assertEquals("Ending principal", 1000, year.endingPrincipal());
-	}
-
-	@Test
-	public void endingPrincipalNeverGoesBelowZero() {
-		StockMarketYear year = new StockMarketYear(10000, 3000, 10);
-		year.withdraw(4000);
-		assertEquals("ending principal", 0, year.endingPrincipal());
+		assertEquals("withdrawals don't earn interest", 800, year.interestEarned(25));
+		
 	}
 	
 	@Test

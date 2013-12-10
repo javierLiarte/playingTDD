@@ -22,10 +22,6 @@ public class StockMarketYear {
 		return startingPrincipal;
 	}
 
-	public int startingCapitalGains() {
-		return startingBalance - startingPrincipal;
-	}
-
 	public int interestRate() {
 		return interestRate;
 	}
