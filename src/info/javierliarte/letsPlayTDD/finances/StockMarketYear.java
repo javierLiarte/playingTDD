@@ -41,28 +41,28 @@ public class StockMarketYear {
 		return totalWithdrawals.substractToZero(startingPrincipal);
 	}
 
-	public int capitalGainsTaxIncurred() {
-		return capitalGainsTaxRate.compoundTaxFor(capitalGainsWithdrawn().amount());
+	public Dollars capitalGainsTaxIncurred() {
+		return capitalGainsTaxRate.compoundTaxFor(capitalGainsWithdrawn());
 	}
 
 	public Dollars totalWithdrawn() {
-		return totalWithdrawals.add(new Dollars(capitalGainsTaxIncurred()));
+		return totalWithdrawals.add(capitalGainsTaxIncurred());
 	}
 
-	public int interestEarned() {
-		return interestRate.interestOn(startingBalance.amount() - totalWithdrawn().amount());
+	public Dollars interestEarned() {
+		return interestRate.interestOn(startingBalance.substract(totalWithdrawn()));
 	}
 	
 	public Dollars endingBalance() {
-		return startingBalance.substract(totalWithdrawn()).add(new Dollars(interestEarned()));
+		return startingBalance.substract(totalWithdrawn()).add(interestEarned());
 	}
 
-	public int endingPrincipal() {
-		return startingPrincipal.substractToZero(totalWithdrawals).amount();
+	public Dollars endingPrincipal() {
+		return startingPrincipal.substractToZero(totalWithdrawals);
 	}
 
 	public StockMarketYear nextYear() {
-		return new StockMarketYear(this.endingBalance(), new Dollars(this.endingPrincipal()), this.interestRate(), this.capitalGainsTaxRate());
+		return new StockMarketYear(this.endingBalance(), this.endingPrincipal(), this.interestRate(), this.capitalGainsTaxRate());
 	}
 
 }

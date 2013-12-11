@@ -16,8 +16,8 @@ public class Dollars {
 		return new Dollars(this.amount - dollars.amount);
 	}
 	
-	public int amount() {
-		return this.amount; // TODO: delete me
+	public int toInt() {
+		return this.amount;
 	}
 
 	public Dollars substractToZero(Dollars dollars) {
