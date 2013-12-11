@@ -7,7 +7,7 @@ import org.junit.Test;
 public class _TaxRateTest {
 
 	@Test
-	public void test() {
+	public void zeroTaxRate() {
 		TaxRate taxRate = new TaxRate(0);
 		assertEquals(0, taxRate.simpleTaxFor(1000));
 		assertEquals(0, taxRate.compoundTaxFor(1000));
